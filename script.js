@@ -25,21 +25,16 @@ function playRound() {
     let cc = computerChoice();
     console.log("Player chose", pc);
     console.log("Computer chose", cc);
-    if (pc == cc)
+    if (pc == cc) {
         console.log("It was a tie!");
-    if (pc == "rock" && cc == "paper") {
-        computerWin();
-    } else if (cc == "rock" && pc == "paper") {
-        playerWin();
-    } else if (pc == "paper" && cc == "scissors") {
-        computerWin();
-    } else if (cc == "paper" && pc == "scissors") {
-        playerWin();
-    } else if (pc == "scissors" && cc == "rock") {
-        computerWin();
-    } else if (cc == "scissors" && pc == "rock") {
-        playerWin();
+        return;
     }
+    if (pc == "rock"     && cc == "scissors" ||
+        pc == "paper"    && cc == "rock"     ||
+        pc == "scissors" && cc == "paper")
+        playerWin();
+    else
+        computerWin();
     displayScore();
 }
 
