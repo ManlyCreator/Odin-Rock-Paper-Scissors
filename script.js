@@ -1,78 +1,107 @@
-// TODO: Consolidate win conditional
+const round = document.querySelector(".round")
+const score = document.querySelector(".score")
+const playerAction = document.querySelector(".players-container .player .action")
+const computerAction = document.querySelector(".players-container .computer .action")
+const dialogue = document.querySelector(".dialogue")
+const choices = document.querySelectorAll(".choices button")
+const playAgain = document.querySelector(".play-again")
 
-let playerScore = 0;
-let computerScore = 0;
+let roundCounter = 0
+let playerScore = 0
+let computerScore = 0
+let playerChoice = ""
+let computerChoice = ""
 
-main();
+main()
 
 function main() {
-    playGame();
+    choices.forEach((choice) => {
+        choice.addEventListener("click", playRound)
+    })
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++)
-        playRound();
-    if (playerScore > computerScore)
-        console.log("Player wins the game!");
-    else if (computerScore > playerScore)
-        console.log("Computer wins the game!");
-    else
-        console.log("The game was a draw!");
-}
+function playRound(e) {
+    if (roundCounter >= 5) return
 
-function playRound() {
-    let pc = playerChoice();
-    let cc = computerChoice();
-    console.log("Player chose", pc);
-    console.log("Computer chose", cc);
-    if (pc == cc) {
-        console.log("It was a tie!");
-        return;
+    roundCounter++
+    playerChoice = e.target.innerText
+    computerChoice = randomChoice()
+
+    updatePlayerAction();
+    updateComputerAction();
+
+    if (playerChoice == computerChoice) {
+        updateDialogue("It was a tie!")
+    } else if (playerChoice == "Rock"     && computerChoice == "Scissors" ||
+        playerChoice == "Paper"    && computerChoice == "Rock"     ||
+        playerChoice == "Scissors" && computerChoice == "Paper") {
+        playerScore++
+        updateDialogue("Player wins the round!")
     }
-    if (pc == "rock"     && cc == "scissors" ||
-        pc == "paper"    && cc == "rock"     ||
-        pc == "scissors" && cc == "paper")
-        playerWin();
-    else
-        computerWin();
-    displayScore();
+    else {
+        computerScore++
+        updateDialogue("Computer wins the round!")
+    }
+
+    if (roundCounter >= 5) {
+        if (playerScore == computerScore)
+            updateDialogue("It was a tie! The match is over!")
+        else if (playerScore > computerScore) 
+            updateDialogue("Player wins! The match is over!")
+        else
+            updateDialogue("Computer wins! The match is over!")
+        endGame()
+    }
+
+    updateScoreboard()
 }
 
-function playerChoice() {
-    return prompt(`
-        Enter one of the three options:
-        - Rock
-        - Paper
-        - Scissors
-        `).toLowerCase();
+function endGame() {
+    let playAgainButton = document.createElement("button")
+    playAgainButton.innerText = "Play Again"
+    playAgainButton.addEventListener("click", reset)
+    playAgain.appendChild(playAgainButton)
 }
 
-function computerChoice() {
+function reset(e) {
+    playAgain.removeChild(e.target)
+    roundCounter = 0
+    playerScore = 0
+    computerScore = 0
+    playerAction.innerText = ""
+    computerAction.innerText = ""
+    updateDialogue("")
+    updateScoreboard()
+}
+
+function randomChoice() {
     switch (randomInt(1, 3)) {
         case 1:
-            return "rock";
+            return "Rock"
         case 2:
-            return "paper";
+            return "Paper"
         case 3:
-            return "scissors";
+            return "Scissors"
     }
 }
 
-function playerWin() {
-    console.log("Player wins!");
-    playerScore++;
+function updatePlayerAction() {
+    playerAction.innerText = `Player chose ${playerChoice}!`
 }
 
-function computerWin() {
-    console.log("Computer wins!");
-    computerScore++;
+function updateComputerAction() {
+    computerAction.innerText = `Computer chose ${computerChoice}!`
 }
 
-function displayScore() {
-    console.log("Player Score:", playerScore);
-    console.log("Computer Score:", computerScore);
+function updateDialogue(str) {
+    dialogue.innerText = str
+}
+
+function updateScoreboard() {
+    round.innerText = `Round: ${roundCounter}`
+    score.innerText = `${playerScore}:${computerScore}`
 }
 
 function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }

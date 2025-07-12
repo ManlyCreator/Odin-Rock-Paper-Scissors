@@ -1,0 +1,31 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    height: 100vh;
+}
+
+.players-container {
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+    height: 50px;
+}
+
+.players-container div {
+    text-align: center;
+    width: 200px;
+}
+
+.dialogue {
+    display: flex;
+    align-items: center;
+    height: 20px;
+}
+
+.play-again {
+    width: 100px;
+    height: 50px;
+}
